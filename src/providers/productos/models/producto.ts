@@ -1,5 +1,5 @@
 export class Producto {
-  constructor(
+  constructor (
     public _id: string,
     public titulo: string,
     public aplicacion: string | null,
@@ -10,6 +10,9 @@ export class Producto {
     public existencias: number,
     public precio: number,
     public origen?: string,
+    // tslint:disable-next-line:variable-name
     public updated_at?: number,
+    // tslint:disable-next-line:variable-name
+    public existencias_total?: string // aqui estan las cantidades del productos en ambas bd ej: 8/10
   ) { }
 }
