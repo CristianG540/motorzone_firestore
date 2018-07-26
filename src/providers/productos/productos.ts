@@ -39,6 +39,7 @@ export class ProductosProvider {
   }
 
   public init (): void {
+    console.log('inicio Servicio Productos')
     /* *************************************** Prods *********** */
     this.sku$ = new BehaviorSubject(null)
 
@@ -52,7 +53,6 @@ export class ProductosProvider {
 
     const prodsSub: Subscription = prodsObserv.subscribe(
       prods => {
-        debugger
         this.productos = prods
       },
       err => {
@@ -75,7 +75,6 @@ export class ProductosProvider {
 
     const prodsSubBog: Subscription = prodsObservBog.subscribe(
       prods => {
-        debugger
         this.productosBogota = prods
       },
       err => {
