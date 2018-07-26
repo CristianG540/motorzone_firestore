@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button icon-only color="danger" (click)="deleteDb()">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Carrito</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content #content>
+  <ion-list [virtualScroll]="_prods" [virtualTrackBy]="trackByProds" [approxItemHeight]="'115px'" [hidden]="cartServ.carItems.length == 0">
+    <ion-item-sliding *virtualItem="let prod">
+
+      <ion-item text-wrap>
+        <ion-thumbnail item-left>
+          <img [src]="prod.imagen" onerror="this.src='assets/img/logo/logo_oil_small.png'" />
+        </ion-thumbnail>
+        <h4>{{ prod.titulo }}</h4>
+        <ion-row>
+          <ion-col>
+            <p>
+              <b>{{ prod._id }}</b>
+            </p>
+            <p>{{ prod.aplicacion }}</p>
+            <p>{{ prod.precio | currency: 'USD': 'symbol': '1.0-0' }}</p>
+          </ion-col>
+          <ion-col text-right>
+            <number-picker [num]="cartServ.getProdCant(prod)" [max]="prod.existencias" (numChange)="cartServ.setProdCant($event, prod)"></number-picker>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item-options side="right">
+        <button ion-button color="danger" (click)="deleteItem(prod)">
+          <ion-icon name="trash"></ion-icon>
+          Borrar
+        </button>
+      </ion-item-options>
+
+      <ion-item-options side="left">
+        <button ion-button color="primary" [navPush]="productoPage" [navParams]="prod">
+          <ion-icon name="eye"></ion-icon>
+          Ver
+        </button>
+      </ion-item-options>
+
+    </ion-item-sliding>
+  </ion-list>
+  <ion-grid *ngIf="cartServ.carItems.length == 0">
+    <ion-row>
+      <ion-col text-center class="empty-cart">
+        <ion-icon name="cart" class="icon-5x"></ion-icon>
+        <br> Su carrito esta vaci&oacute;
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button icon-right solid color="royal" [navPush]="confirmarOrdenPage" [disabled]="cartServ.carItems.length == 0">
+        Continuar
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+      </button>
+      <!--<button ion-button icon-right solid color="royal" (click)="cartServ.destroyDB()">
+          delDB
+      </button>-->
+    </ion-buttons>
+    <ion-buttons right>
+      <b>Subtotal:</b> {{ cartServ.subTotalPrice | currency: 'USD': 'symbol': '1.0-0' }}
+      <br>
+      <b>IVA:</b> {{ cartServ.ivaPrice | currency: 'USD': 'symbol': '1.0-0' }}
+      <br>
+      <b>Total:</b> {{ cartServ.subTotalPrice + cartServ.ivaPrice | currency: 'USD': 'symbol': '1.0-0' }}
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,56 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Informaci&oacute;n Cliente</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <b>Nombre:</b> {{ cliente?.nombre_cliente }}
+  <br>
+  <br>
+  <b>NIT:</b> {{ cliente?.id }}
+  <br>
+  <br>
+  <b>Telefono:</b> {{ cliente?.telefono }}
+  <br>
+  <br>
+  <b>Ciudad:</b> {{ cliente?.ciudad }}
+  <br>
+  <br>
+  <b>Direcci&oacute;n:</b> {{ cliente?.direccion }}
+  <br>
+  <br>
+  <b>Latitud:</b> {{ cliente?.ubicacion?.latitud }}
+  <br>
+  <br>
+  <b>Longitud:</b> {{ cliente?.ubicacion?.longitud }}
+  <br>
+  <br>
+  <b>Precision:</b> {{ cliente?.ubicacion?.accuracy }}
+  <br>
+  <br>
+
+  <ion-row>
+    <ion-col>
+      <button ion-button block icon-left (click)="showCarteraModal()">
+        <ion-icon name="calculator"></ion-icon> Cartera </button>
+    </ion-col>
+    <ion-col>
+      <button ion-button block icon-left color="secondary" (click)="askForLocation()">
+        <ion-icon name="locate"></ion-icon>Marcar ubicaci&oacute;n</button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <agm-map [latitude]="cliente?.ubicacion?.latitud" [longitude]="cliente?.ubicacion?.longitud" [zoom]="zoom">
+        <agm-marker [latitude]="cliente?.ubicacion?.latitud" [longitude]="cliente?.ubicacion?.longitud" [label]="cliente?._id"></agm-marker>
+      </agm-map>
+    </ion-col>
+  </ion-row>
+
+</ion-content>

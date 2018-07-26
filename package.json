@@ -1,0 +1,87 @@
+{
+  "name": "motorzone-app-firestore",
+  "version": "1.0.0",
+  "author": "CristianG540",
+  "private": true,
+  "scripts": {
+    "clean": "ionic-app-scripts clean",
+    "build": "ionic-app-scripts build",
+    "lint": "ionic-app-scripts lint",
+    "ionic:build": "ionic-app-scripts build",
+    "ionic:serve": "ionic-app-scripts serve",
+    "ionic:build:memory": "node --max-old-space-size=8192 ./node_modules/@ionic/app-scripts/bin/ionic-app-scripts.js build"
+  },
+  "dependencies": {
+    "@agm/core": "^1.0.0-beta.3",
+    "@angular/animations": "5.2.10",
+    "@angular/common": "5.2.10",
+    "@angular/compiler": "5.2.10",
+    "@angular/compiler-cli": "5.2.10",
+    "@angular/core": "5.2.10",
+    "@angular/forms": "5.2.10",
+    "@angular/http": "5.2.10",
+    "@angular/platform-browser": "5.2.10",
+    "@angular/platform-browser-dynamic": "5.2.10",
+    "@ionic-native/background-mode": "^4.9.0",
+    "@ionic-native/core": "4.9.0",
+    "@ionic-native/diagnostic": "^4.9.0",
+    "@ionic-native/geolocation": "^4.9.0",
+    "@ionic-native/location-accuracy": "^4.9.0",
+    "@ionic-native/splash-screen": "4.9.0",
+    "@ionic-native/status-bar": "4.9.0",
+    "@ionic/storage": "^2.1.3",
+    "@types/lodash": "^4.14.110",
+    "@types/node": "^10.5.1",
+    "@types/pouchdb": "^6.3.2",
+    "@types/pouchdb-upsert": "^2.2.3",
+    "angularfire2": "5.0.0-rc.4",
+    "cordova-android": "^7.1.0",
+    "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-geolocation": "^4.0.1",
+    "cordova-plugin-ionic-keyboard": "^2.1.2",
+    "cordova-plugin-ionic-webview": "^1.2.1",
+    "cordova-plugin-request-location-accuracy": "^2.2.3",
+    "cordova-plugin-splashscreen": "^5.0.2",
+    "cordova-plugin-whitelist": "^1.3.3",
+    "cordova-sqlite-storage": "^2.3.3",
+    "cordova.plugins.diagnostic": "^4.0.8",
+    "firebase": "4.12.1",
+    "increase-memory-limit": "^1.0.6",
+    "ionic-angular": "3.9.2",
+    "ionicons": "3.0.0",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "pouchdb": "^7.0.0",
+    "pouchdb-adapter-cordova-sqlite": "git+https://github.com/CristianG540/pouchdb-adapter-cordova-sqlite.git",
+    "pouchdb-upsert": "^2.2.0",
+    "raven-js": "^3.25.2",
+    "rxjs": "5.5.10",
+    "sw-toolbox": "3.6.0",
+    "zone.js": "0.8.26"
+  },
+  "devDependencies": {
+    "@ionic/app-scripts": "3.1.11",
+    "@ionic/lab": "^1.0.0-rc.13",
+    "tslint-config-standard": "^7.1.0",
+    "typescript": "~2.6.2"
+  },
+  "description": "App Motorzone colombia",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-geolocation": {
+        "GEOLOCATION_USAGE_DESCRIPTION": "Tienda Motorzone desea saber tu ubicacion"
+      },
+      "cordova.plugins.diagnostic": {},
+      "cordova-plugin-request-location-accuracy": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-sqlite-storage": {}
+    },
+    "platforms": [
+      "android"
+    ]
+  }
+}

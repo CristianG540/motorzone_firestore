@@ -1,0 +1,7 @@
+{
+  "name": "af2-lists",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

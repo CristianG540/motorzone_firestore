@@ -1,0 +1,10 @@
+<ion-tabs selectedIndex="0">
+  <ion-tab [root]="buscarRoot" tabTitle="Inicio" tabIcon="home"></ion-tab>
+  <ion-tab [root]="marcasRoot" tabTitle="Marcas" tabIcon="star-outline"></ion-tab>
+  <ion-tab [root]="carritoRoot" tabTitle="Carrito" tabIcon="cart" [tabBadge]="itemsCart" tabBadgeStyle="danger"></ion-tab>
+  <ion-tab [show]="!authServ?.userData?.nitCliente" [root]="clientesRoot" tabTitle="Clientes" tabIcon="people"></ion-tab>
+  <ion-tab [show]="authServ?.userData?.nitCliente ? true : false" [root]="carteraRoot" tabTitle="Cartera" tabIcon="sad"></ion-tab>
+  <ion-tab [root]="ordenesRoot" tabTitle="Ordenes" tabIcon="list"></ion-tab>
+  <ion-tab [root]="buscarRoot" tabTitle="Buscar" tabIcon="search"></ion-tab>
+</ion-tabs>
+

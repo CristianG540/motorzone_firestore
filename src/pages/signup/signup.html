@@ -1,0 +1,72 @@
+<ion-header>
+
+  <ion-navbar color="secondary">
+    <ion-title>Crear cuenta</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <form [formGroup]="signupForm" (ngSubmit)="register()" novalidate>
+    <ion-row class="account-form">
+      <ion-col>
+        <ion-list inset>
+
+          <ion-item>
+            <ion-label>
+              <ion-icon name="person"></ion-icon>
+            </ion-label>
+            <ion-input formControlName="name" placeholder="Nombre Completo" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <ion-icon name="person"></ion-icon>
+            </ion-label>
+            <ion-input formControlName="username" placeholder="Usuario" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <ion-icon name="person"></ion-icon>
+            </ion-label>
+            <ion-input formControlName="asesor_id" placeholder="ID asesor" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <ion-icon name="person"></ion-icon>
+            </ion-label>
+            <ion-input formControlName="nit_cliente" placeholder="Nit cliente" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <ion-icon name="mail"></ion-icon>
+            </ion-label>
+            <ion-input formControlName="email" placeholder="Email" type="email"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <ion-icon name="lock"></ion-icon>
+            </ion-label>
+            <ion-input formControlName="password" placeholder="Contraseña" type="password"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <ion-icon name="lock"></ion-icon>
+            </ion-label>
+            <ion-input formControlName="passwordConfirm" placeholder="Confirmar contraseña" type="password"></ion-input>
+          </ion-item>
+
+        </ion-list>
+
+        <button type="submit" ion-button class="continue-button" [disabled]="!signupForm.valid">Registrar</button>
+
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
