@@ -13,7 +13,7 @@ import * as _ from 'lodash'
 import Raven from 'raven-js'
 
 // AngularFire - Firebase
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database'
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore'
 import * as firebase from 'firebase'
 
 // Models
@@ -27,28 +27,32 @@ import { ConfigProvider as cg } from '../config/config'
 export class ProductosProvider {
 
   public productos: Producto[]
+  public productosBogota: Producto[]
   public sku$: BehaviorSubject<string | null>
+  public skuBog$: BehaviorSubject<string | null>
 
   constructor (
-    private angularFireDB: AngularFireDatabase,
+    private angularFirestoreDB: AngularFirestore,
     private evts: Events,
     private http: HttpClient
   ) {
   }
 
   public init (): void {
+    /* *************************************** Prods *********** */
     this.sku$ = new BehaviorSubject(null)
 
     const prodsObserv: Observable<any> = this.sku$.switchMap(sku => {
 
-      return this.angularFireDB.list(`products/`, ref => {
-        return sku ? ref.orderByKey().startAt(sku).endAt(sku + '\uffff').limitToFirst(100) : ref.limitToFirst(100)
+      return this.angularFirestoreDB.collection(`products/`, ref => {
+        return sku ? ref.orderBy('_id', 'asc').startAt(sku).endAt(sku + '\uffff') : ref.orderBy('_id', 'asc')
       }).valueChanges()
 
     })
 
     const prodsSub: Subscription = prodsObserv.subscribe(
       prods => {
+        debugger
         this.productos = prods
       },
       err => {
@@ -58,8 +62,34 @@ export class ProductosProvider {
         })
       }
     )
+    /* *************************************** Prods Bogota *********** */
+    this.skuBog$ = new BehaviorSubject(null)
+
+    const prodsObservBog: Observable<any> = this.sku$.switchMap(sku => {
+
+      return this.angularFirestoreDB.collection(`prods-bogota/`, ref => {
+        return sku ? ref.orderBy('_id', 'asc').startAt(sku).endAt(sku + '\uffff') : ref.orderBy('_id', 'asc')
+      }).valueChanges()
+
+    })
+
+    const prodsSubBog: Subscription = prodsObservBog.subscribe(
+      prods => {
+        debugger
+        this.productosBogota = prods
+      },
+      err => {
+        console.error('error init - providers/productos.ts', err)
+        Raven.captureException(new Error(`error init - providers/productos.ts 🐛: ${JSON.stringify(err)}`), {
+          extra: err
+        })
+      }
+    )
+    /** ************************************************************************ */
+
     this.evts.subscribe('auth:logout', () => {
       prodsSub.unsubscribe()
+      prodsSubBog.unsubscribe()
     })
   }
 
