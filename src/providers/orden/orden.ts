@@ -16,7 +16,7 @@ import * as _ from 'lodash'
 import * as moment from 'moment'
 import Raven from 'raven-js'
 
-// AngularFire - Firebase
+// AngularFire - Firestore
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore'
 import * as firebase from 'firebase'
 
