@@ -18,6 +18,7 @@ import { AuthProvider } from '../providers/auth/auth'
 import { ConfigProvider } from '../providers/config/config'
 import { OrdenProvider } from '../providers/orden/orden'
 import { CarritoProvider } from '../providers/carrito/carrito'
+import { ProductosProvider } from '../providers/productos/productos'
 
 // Models
 import { User } from '../providers/auth/model/user'
@@ -51,6 +52,7 @@ export class MyApp {
     private cgServ: ConfigProvider,
     private ordenServ: OrdenProvider,
     private cartServ: CarritoProvider,
+    private prodsServ: ProductosProvider,
     private evts: Events
   ) {
 
@@ -82,6 +84,7 @@ export class MyApp {
       (user: User) => {
 
         if (user && authServ.userSession) {
+          this.prodsServ.init()
           this.cartServ.initDB()
           this.ordenServ.init()
           this.cgServ.setTimerCheckJosefa() // inicio el timer que verifica el token de josefa no este vencido
