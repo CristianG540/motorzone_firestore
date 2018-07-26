@@ -26,7 +26,7 @@
         <p>{{ item.titulo }}</p>
         <p>{{ item.aplicacion }}</p>
         <p *ngIf="!authServ?.userData?.nitCliente">
-          <b>Disponibles: </b> {{ item.existencias }} </p>
+          <b>Disponibles: </b> {{ item.existencias_total }} </p>
         <p>
           <b>Precio: </b> {{ item.precio | currency: 'USD': 'symbol': '1.0-0' }} </p>
         <button large clear ion-button item-right icon-only color="dark" (click)="addProd(item)" [disabled]="item.existencias < 1">

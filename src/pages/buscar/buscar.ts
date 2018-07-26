@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ToastController, MenuController } 
 
 // libs terceros
 import Raven from 'raven-js'
+import { map } from 'lodash'
 
 // Providers
 import { ProductosProvider } from '../../providers/productos/productos'
@@ -33,7 +34,6 @@ export class BuscarPage {
     private util: ConfigProvider
   ) {
     this.menuCtrl.enable(true)
-    this.prodsServ.init()
   }
 
   private updateSearch (ev: any): void {
@@ -48,7 +48,29 @@ export class BuscarPage {
     this.prodsServ.searchAutocomplete(val)
       .then((prods: Producto[]) => {
         loading.dismiss()
-        this.autocompleteItems = prods
+
+        this.autocompleteItems = map(prods, prod => {
+          const iProd: number = ConfigProvider.binarySearch(
+            this.prodsServ.productos,
+            '_id',
+            prod._id,
+            true
+          )
+          const iProdBog: number = ConfigProvider.binarySearch(
+            this.prodsServ.productosBogota,
+            '_id',
+            prod._id,
+            true
+          )
+          const cantProds: number = (iProd !== 99999) ? this.prodsServ.productos[iProd].existencias : 0
+          const cantProdsBog: number = (iProdBog !== 99999) ? this.prodsServ.productosBogota[iProdBog].existencias : 0
+
+          prod.existencias = (this.authServ.userData.bodega === '01') ? cantProds : cantProdsBog
+          prod.existencias_total = (this.authServ.userData.bodega === '01') ? `${cantProds}/${cantProdsBog}` : `${cantProdsBog}/${cantProds}`
+
+          return prod
+
+        })
       }).catch(err => {
         console.error('Error updateSearch - pages/buscar.ts', err)
         Raven.captureException(new Error(`Error updateSearch - pages/buscar.ts 🐛: ${JSON.stringify(err)}`), {
