@@ -43,10 +43,10 @@ export class OrdenProvider {
     private storage: Storage,
     private http: HttpClient
   ) {
-    console.log('Hello OrdenProvider Provider')
   }
 
   public init (): void {
+    console.log('inicio Servicio Ordenes')
     this.ordenesRef = this.angularFirestoreDB.collection(`users/`).doc(this.authServ.userData.uid).collection('orders')
     const ordenesObserv = this.ordenesRef.valueChanges().subscribe(
       ordenes => {
