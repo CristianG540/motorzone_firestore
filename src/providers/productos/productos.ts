@@ -22,6 +22,7 @@ import { CarItem } from '../carrito/models/carItem'
 
 // Providers
 import { ConfigProvider as cg } from '../config/config'
+import { AuthProvider } from '../auth/auth'
 
 @Injectable()
 export class ProductosProvider {
@@ -34,7 +35,8 @@ export class ProductosProvider {
   constructor (
     private angularFirestoreDB: AngularFirestore,
     private evts: Events,
-    private http: HttpClient
+    private http: HttpClient,
+    private authServ: AuthProvider
   ) {
   }
 
@@ -92,17 +94,9 @@ export class ProductosProvider {
     })
   }
 
-  public async fetchProdsByids (ids: string[]): Promise<Producto[]> {
-
-    const prodPromises: Promise<any>[] = _.map(ids, (v) => {
-      return firebase.database().ref(`products/${v}`).once('value')
-    })
-
-    const prodsSnapshots = await Promise.all(prodPromises)
-
-    return _.map(prodsSnapshots, (snapshot: any) => {
-
-      const producto: Producto = snapshot.val()
+  public fetchProdsByids (ids: string[]): Producto[] {
+    return _.map(ids, (id): Producto => {
+      const iProd: number = cg.binarySearch(this.currentProds, '_id', id, true)
 
       /**
        * esta validacion la hago por si se elimina un producto de la bd
@@ -110,54 +104,57 @@ export class ProductosProvider {
        * en el carrito y casualmente se elimina, ocurria un error donde
        * no se encontraba el _id
        */
-      if (_.has(producto, '_id')) {
-        return producto
+      if (_.has(this.currentProds[iProd], '_id')) {
+        return this.currentProds[iProd]
       } else {
-        return new Producto(
-          snapshot.key,
-          'producto agotado',
-          'producto agotado',
-          'https://www.igbcolombia.com/app/www/assets/img/logo/logo_igb_small.png',
-          null,
-          '',
-          'UND',
-          0,
-          0,
-          ''
-        )
+        return {
+          _id: id,
+          titulo: 'producto agotado',
+          aplicacion: 'producto agotado',
+          imagen: 'https://www.igbcolombia.com/app/assets/img/logo/logo_igb_small.png',
+          categoria: null,
+          marcas: '',
+          unidad: 'UND',
+          existencias: 0,
+          precio: 0,
+          origen: ''
+        }
       }
 
     })
   }
   /**
-   * Esta funcion se encarga de actualizar los productos en firebase al crear una orden
+   * Esta funcion se encarga de actualizar los productos en firestore al crear una orden
    *
    * @param {CarItem[]} carItems
    * @returns {Promise<any>}
    * @memberof ProductosProvider
    */
-  public async updateQuantity (carItems: CarItem[]): Promise<any> {
+  public updateQuantity (carItems: CarItem[]): Promise<any> {
+    debugger
+    // Create a batch to run an atomic write
+    const batch = this.angularFirestoreDB.firestore.batch()
     // Declaro la referencia de los productos para actualizarlos mas adelante
-    const prodsRef: AngularFireList<any> = this.angularFireDB.list(`products/`)
+    const collectionProdsRef: AngularFirestoreCollection<any> = this.angularFirestoreDB.collection(this.currentProdBD)
     // en un array guardo solo los ids de los productos del carrito
     const prodsId = _.map(carItems, '_id')
 
-    // Busco los productos del carrito en firebase por sus ids
-    const productos: Producto[] = await this.fetchProdsByids(prodsId)
+    // Busco los productos del carrito en firestore por sus ids
+    const productos: Producto[] = this.fetchProdsByids(prodsId)
 
-    // en un array guardo una a una las promsesas de actualizacion de cada producto
-    const updatePromises: Promise<any>[] = _.map(productos, (prod: Producto) => {
-      const itemId = cg.binarySearch(carItems, '_id', prod._id)
+    for (const prod of productos) {
 
-      return prodsRef.update(prod._id, {
+      const itemId: number = cg.binarySearch(carItems, '_id', prod._id)
+      const docProdRef = collectionProdsRef.doc(prod._id).ref
+      batch.update(docProdRef, {
         existencias: prod.existencias - carItems[itemId].cantidad,
         origen: 'app',
         updated_at: Date.now()
       })
-    })
 
-    // ejecuto todas las promesas del array y devuelvo los valores que devuelven dichas promesas
-    return Promise.all(updatePromises)
+    }
+
+    return batch.commit()
 
   }
 
@@ -197,6 +194,28 @@ export class ProductosProvider {
       return []
     }
 
+  }
+
+  /**
+   * Este getter me trae la base de datos de productos activa
+   *
+   * @readonly
+   * @type {string}
+   * @memberof AuthProvider
+   */
+  public get currentProdBD (): string {
+    return (this.authServ.userData.bodega === '01') ? 'products' : 'prods-bogota'
+  }
+
+  /**
+   * este getter se encarga de traerme los productos de la bd activa
+   *
+   * @readonly
+   * @type {Producto[]}
+   * @memberof ProductosProvider
+   */
+  public get currentProds (): Producto[] {
+    return (this.authServ.userData.bodega === '01') ? this.productos : this.productosBogota
   }
 
 }

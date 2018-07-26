@@ -1,37 +1,37 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component } from '@angular/core'
+import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 // Libs terceros
-import _ from 'lodash';
-import Raven from 'raven-js';
+import _ from 'lodash'
+import Raven from 'raven-js'
 
 // Models
-import { CarItem } from '../../providers/carrito/models/carItem';
-import { Orden } from '../../providers/orden/models/orden';
+import { CarItem } from '../../providers/carrito/models/carItem'
+import { Orden } from '../../providers/orden/models/orden'
 
 // Providers
-import { CarritoProvider } from '../../providers/carrito/carrito';
-import { ClientesProvider } from '../../providers/clientes/clientes';
-import { ConfigProvider as cg } from '../../providers/config/config';
-import { AuthProvider } from '../../providers/auth/auth';
-import { GeolocationProvider } from '../../providers/geolocation/geolocation';
-import { OrdenProvider } from '../../providers/orden/orden';
-import { ProductosProvider } from '../../providers/productos/productos';
+import { CarritoProvider } from '../../providers/carrito/carrito'
+import { ClientesProvider } from '../../providers/clientes/clientes'
+import { ConfigProvider as cg } from '../../providers/config/config'
+import { AuthProvider } from '../../providers/auth/auth'
+import { GeolocationProvider } from '../../providers/geolocation/geolocation'
+import { OrdenProvider } from '../../providers/orden/orden'
+import { ProductosProvider } from '../../providers/productos/productos'
 
 @IonicPage()
 @Component({
   selector: 'page-confirmar-orden',
-  templateUrl: 'confirmar-orden.html',
+  templateUrl: 'confirmar-orden.html'
 })
 export class ConfirmarOrdenPage {
 
-  private ordenForm: FormGroup;
-  private newClient: FormGroup;
-  private newClientFlag: boolean = false;
-  private transportadora: number;
+  private ordenForm: FormGroup
+  private newClient: FormGroup
+  private newClientFlag: boolean = false
+  private transportadora: number
 
-  constructor(
+  constructor (
     private authServ: AuthProvider,
     private cartServ: CarritoProvider,
     private ordenServ: OrdenProvider,
@@ -41,59 +41,55 @@ export class ConfirmarOrdenPage {
     private fb: FormBuilder,
     private navCtrl: NavController,
     private modalCtrl: ModalController,
-    private alertCtrl: AlertController,
+    private alertCtrl: AlertController
   ) {
   }
 
   // Runs when the page is about to enter and become the active page.
-  ionViewWillLoad() {
-    this.initializeForm();
+  ionViewWillLoad () {
+    this.initializeForm()
   }
 
-  private initializeForm(): void {
+  private initializeForm (): void {
 
     this.ordenForm = this.fb.group({
       observaciones: [''],
-      cliente: [this.authServ.userData.nitCliente, Validators.required],
-    });
+      cliente: [this.authServ.userData.nitCliente, Validators.required]
+    })
 
-    if ( this.authServ.userData.transportadora ) {
-      this.transportadora = this.authServ.userData.transportadora;
-    }
-
-    if ( this.authServ.userData.nitCliente ) {
+    if (this.authServ.userData.nitCliente) {
 
       this.ordenForm = this.fb.group({
         observaciones: [''],
-        cliente: ['C' + this.authServ.userData.nitCliente, Validators.required],
-      });
+        cliente: ['C' + this.authServ.userData.nitCliente, Validators.required]
+      })
     } else {
 
       this.ordenForm = this.fb.group({
         observaciones: [''],
-        cliente: [this.authServ.userData.nitCliente, Validators.required],
-      });
+        cliente: [this.authServ.userData.nitCliente, Validators.required]
+      })
     }
 
     this.newClient = this.fb.group({
       nombre: ['', Validators.required],
-      codCliente: ['', Validators.required],
-    });
+      codCliente: ['', Validators.required]
+    })
   }
 
-  private showClientModal(): void {
-    const modal = this.modalCtrl.create('ClienteModalPage');
+  private showClientModal (): void {
+    const modal = this.modalCtrl.create('ClienteModalPage')
     modal.onDidDismiss(data => {
       if (data) {
-        this.ordenForm.controls['cliente'].setValue(data.nit);
-        this.transportadora = data.transp;
+        this.ordenForm.controls['cliente'].setValue(data.nit)
+        this.transportadora = data.transp
       }
-    });
-    modal.present();
+    })
+    modal.present()
   }
 
-  private onSubmit(): void {
-    const loading = this.util.showLoading();
+  private onSubmit (): void {
+    const loading = this.util.showLoading()
 
     // get current position
     this.geolocation.getCurrentPosition().then(pos => {
@@ -101,28 +97,28 @@ export class ConfirmarOrdenPage {
       this.procesarOrden({
         lat: pos.latitude,
         lon: pos.longitude,
-        accuracy: pos.accuracy,
-      });
-      loading.dismiss();
-    }).catch( (err) => {
+        accuracy: pos.accuracy
+      })
+      loading.dismiss()
+    }).catch((err) => {
 
-      loading.dismiss();
-      console.error('error onSubmit pages/confirmar-orden.ts', err);
-      Raven.captureException( new Error(`error onSubmit pages/confirmar-orden.ts 🐛: ${JSON.stringify(err)}`), {
-        extra: err,
-      });
+      loading.dismiss()
+      console.error('error onSubmit pages/confirmar-orden.ts', err)
+      Raven.captureException(new Error(`error onSubmit pages/confirmar-orden.ts 🐛: ${JSON.stringify(err)}`), {
+        extra: err
+      })
       if (_.has(err, 'code') && err.code === 4 || err.code === 1) {
         this.alertCtrl.create({
           title: 'Error.',
           message: 'Por favor habilite el uso del gps, para poder marcar la posicion del pedido',
-          buttons: ['Ok'],
-        }).present();
+          buttons: ['Ok']
+        }).present()
 
       } else {
-        this.procesarOrden();
-        console.error('GPS- onSubmit confirmar_orden.ts - Error al marcar la posicion de pedido 😫: ' + err);
+        this.procesarOrden()
+        console.error('GPS- onSubmit confirmar_orden.ts - Error al marcar la posicion de pedido 😫: ' + err)
       }
-    });
+    })
 
   }
 
@@ -140,15 +136,15 @@ export class ConfirmarOrdenPage {
    * }
    * @memberof ConfirmarOrdenPage
    */
-  private procesarOrden(position: any = ''): void {
+  private procesarOrden (position: any = ''): void {
 
-    const loading = this.util.showLoading();
+    const loading = this.util.showLoading()
     /**
      * recupero los items del carrito para guardarlos en la orden
      */
-    const carItems: CarItem[] = this.cartServ.carItems;
-    let orden: Orden;
-    const observaciones = this.ordenForm.get('observaciones').value;
+    const carItems: CarItem[] = this.cartServ.carItems
+    let orden: Orden
+    const observaciones = this.ordenForm.get('observaciones').value
     /**
      * Si el cliente no es nuevo ya sea porque se sabia el nit y lo
      * ingreso manualmente o desde el buscador de clientes entonces recupero
@@ -156,7 +152,7 @@ export class ConfirmarOrdenPage {
      */
     if (!this.newClientFlag && this.ordenForm.valid) {
 
-      const form = JSON.parse(JSON.stringify(this.ordenForm.value));
+      const form = JSON.parse(JSON.stringify(this.ordenForm.value))
       orden = {
         _id : Date.now().toString(),
         nitCliente: form.cliente,
@@ -168,10 +164,10 @@ export class ConfirmarOrdenPage {
         type: 'orden',
         location: {
           lat : position.lat ? position.lat : '',
-          lon : position.lon ? position.lon : '',
+          lon : position.lon ? position.lon : ''
         },
-        accuracy: position.accuracy ? position.accuracy : '',
-      };
+        accuracy: position.accuracy ? position.accuracy : ''
+      }
     }
     /**
      * Si le dio click a la opcion de nuevo cliente entonces oculto el buscador de clientes
@@ -180,7 +176,7 @@ export class ConfirmarOrdenPage {
      */
     if (this.newClientFlag && this.newClient.valid) {
 
-      const form = JSON.parse(JSON.stringify(this.newClient.value));
+      const form = JSON.parse(JSON.stringify(this.newClient.value))
       orden = {
         _id : Date.now().toString(),
         newClient : form,
@@ -192,10 +188,10 @@ export class ConfirmarOrdenPage {
         type: 'orden',
         location: {
           lat : position.lat ? position.lat : '',
-          lon : position.lon ? position.lon : '',
+          lon : position.lon ? position.lon : ''
         },
-        accuracy: position.accuracy ? position.accuracy : '',
-      };
+        accuracy: position.accuracy ? position.accuracy : ''
+      }
     }
 
     /**
@@ -204,44 +200,45 @@ export class ConfirmarOrdenPage {
     this.ordenServ.pushItem(orden)
       .then(res => {
         // Actualizo la cantidad de los productos que se ordenaron
-        return this.prodServ.updateQuantity(carItems);
+        return this.prodServ.updateQuantity(carItems)
       })
       .then(res => {
+        debugger
         /** Vacio el carrito y envio el usuario al tab de ordenes */
-        this.cartServ.destroyDB(true);
-        this.navCtrl.popToRoot();
-        this.navCtrl.parent.select(5);
+        this.cartServ.destroyDB(true)
+        this.navCtrl.popToRoot()
+        this.navCtrl.parent.select(5)
         /** *** *** *** *** *** *** *** *** *** *** *** *** ***   */
 
-        loading.dismiss();
+        loading.dismiss()
 
-        return this.ordenServ.sendOrdersSap();
+        return this.ordenServ.sendOrdersSap()
 
       })
-      .then( (responses: any) => {
+      .then((responses: any) => {
         const failOrders = _.filter(responses.apiRes, (res: any) => {
-          return res.responseApi.code >= 400;
-        });
+          return res.responseApi.code >= 400
+        })
         if (failOrders.length > 0) {
           this.alertCtrl.create({
             title: 'Advertencia.',
             message: failOrders.length + ' ordenes no se han podido subir a sap, verifique su conexion a internet y vuelva a intentarlo',
-            buttons: ['Ok'],
-          }).present();
+            buttons: ['Ok']
+          }).present()
         } else {
           this.alertCtrl.create({
             title: 'Info.',
             message: 'Las ordenes se subieron correctamente a sap.',
-            buttons: ['Ok'],
-          }).present();
+            buttons: ['Ok']
+          }).present()
         }
       })
       .catch(err => {
-        console.error('Error procesarOrden pages/confirmar-orden.ts', err);
-        Raven.captureException( new Error(`Error procesarOrden pages/confirmar-orden.ts 🐛: ${JSON.stringify(err)}`), {
-          extra: err,
-        });
-      });
+        console.error('Error procesarOrden pages/confirmar-orden.ts', err)
+        Raven.captureException(new Error(`Error procesarOrden pages/confirmar-orden.ts 🐛: ${JSON.stringify(err)}`), {
+          extra: err
+        })
+      })
   }
 
   /**
@@ -256,11 +253,11 @@ export class ConfirmarOrdenPage {
    * @type {boolean}
    * @memberof ConfirmarOrdenPage
    */
-  public get formStatus(): boolean {
+  public get formStatus (): boolean {
     if (this.newClientFlag) {
-      return this.newClient.valid;
+      return this.newClient.valid
     } else {
-      return this.ordenForm.valid;
+      return this.ordenForm.valid
     }
   }
 

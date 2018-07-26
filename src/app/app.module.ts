@@ -21,7 +21,6 @@ import { CarteraPage } from '../pages/cartera/cartera'
 
 // Providers
 import { ConfigProvider } from '../providers/config/config'
-import { SongProvider } from '../providers/song/song'
 import { AuthProvider } from '../providers/auth/auth'
 import { ProductosProvider } from '../providers/productos/productos'
 import { CarritoProvider } from '../providers/carrito/carrito'
@@ -35,7 +34,6 @@ import { SentryErrorHandler } from '../providers/error-handler/sentry-errorhandl
 
 // Libs terceros
 import { AngularFireModule } from 'angularfire2'
-import { AngularFireDatabaseModule, AngularFireDatabase } from 'angularfire2/database'
 import { AngularFireAuthModule } from 'angularfire2/auth'
 import { AngularFirestoreModule } from 'angularfire2/firestore'
 
@@ -57,7 +55,6 @@ import { AngularFirestoreModule } from 'angularfire2/firestore'
       driverOrder: ['indexeddb', 'sqlite', 'websql']
     }),
     AngularFireModule.initializeApp(ConfigProvider.firebaseConfig),
-    AngularFireDatabaseModule,
     AngularFireAuthModule,
     AngularFirestoreModule
   ],
@@ -74,9 +71,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore'
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: SentryErrorHandler },
-    AngularFireDatabase,
     ConfigProvider,
-    SongProvider,
     AuthProvider,
     ProductosProvider,
     CarritoProvider,

@@ -84,6 +84,7 @@ export class MyApp {
       (user: User) => {
 
         if (user && authServ.userSession) {
+          console.log('authObserver')
           this.prodsServ.init()
           this.cartServ.initDB()
           this.ordenServ.init()

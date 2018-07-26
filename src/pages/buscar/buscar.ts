@@ -83,6 +83,11 @@ export class BuscarPage {
 
     this.util.promptAlertCant(d => {
 
+      if (d.txtCantidad < 1) {
+        this.util.showToast(`Ingrese una cantidad valida.`)
+        return false
+      }
+
       if (d.txtCantidad && producto.existencias >= d.txtCantidad) {
 
         const loading = this.util.showLoading()
