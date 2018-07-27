@@ -110,6 +110,12 @@ export class AuthProvider {
 
   }
 
+  public changeWarehouse (): Promise<any> {
+    return this.updateUserData({
+      bodega: (this.userData.bodega === '01') ? '09' : '01'
+    })
+  }
+
   public login (email, password): Promise<any> {
     return this.angularFireAuth.auth.signInWithEmailAndPassword(email, password)
   }

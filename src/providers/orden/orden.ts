@@ -90,6 +90,7 @@ export class OrdenProvider {
           cantidad   : item.cantidad,
           titulo     : item.titulo,
           total      : item.totalPrice,
+          bodega     : this.authServ.userData.bodega,
           descuento  : 0
         }
       })

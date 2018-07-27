@@ -272,13 +272,17 @@ export class CarritoProvider {
    */
   private async cleanFlags (): Promise<any> {
     try {
+      // tslint:disable-next-line:variable-name
       const timsum_flag = await this._db.get('_local/timsum_flag')
       await this._db.remove(timsum_flag)
+    // tslint:disable-next-line:no-empty
     } catch (error) {}
 
     try {
+      // tslint:disable-next-line:variable-name
       const not_timsum_flag = await this._db.get('_local/not_timsum_flag')
       await this._db.remove(not_timsum_flag)
+    // tslint:disable-next-line:no-empty
     } catch (error) {}
   }
   /** ********************** Fin Manejo del tema de bogas timsum ********************************* */

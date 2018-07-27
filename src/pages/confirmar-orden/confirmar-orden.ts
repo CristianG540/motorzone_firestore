@@ -203,7 +203,6 @@ export class ConfirmarOrdenPage {
         return this.prodServ.updateQuantity(carItems)
       })
       .then(res => {
-        debugger
         /** Vacio el carrito y envio el usuario al tab de ordenes */
         this.cartServ.destroyDB(true)
         this.navCtrl.popToRoot()

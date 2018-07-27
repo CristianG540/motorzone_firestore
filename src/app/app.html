@@ -8,6 +8,7 @@
       <p class="name"> {{ authServ?.userData?.username }} </p>
       <p class="e-mail"> {{ authServ?.userData?.email }} </p>
       <p class="e-mail">Asesor: {{ authServ?.userData?.idAsesor }}</p>
+      <p class="e-mail">Bodega: {{ authServ?.userData?.bodega }}</p>
       <p *ngIf="authServ?.userData?.nitCliente" class="e-mail">NIT: {{ authServ?.userData?.nitCliente }}</p>
       <p class="e-mail" (click)="pressToEgg($event)">Version: 1.0.0</p>
     </div>
@@ -15,6 +16,10 @@
       <button menuClose="left" ion-item detail-none (click)="reloadApp()">
         <ion-icon name="sync" item-left></ion-icon>
         Recargar App
+      </button>
+      <button menuClose="left" ion-item detail-none (click)="changeWarehouse()">
+        <ion-icon name="cube" item-left></ion-icon>
+        Cambiar Bodega
       </button>
       <button menuClose="left" ion-item detail-none (click)="verificarOrdenes()" [disabled]="btnVerifOrdState">
         <ion-icon name="cloud-upload" item-left></ion-icon>

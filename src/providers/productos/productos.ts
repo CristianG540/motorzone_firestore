@@ -131,7 +131,6 @@ export class ProductosProvider {
    * @memberof ProductosProvider
    */
   public updateQuantity (carItems: CarItem[]): Promise<any> {
-    debugger
     // Create a batch to run an atomic write
     const batch = this.angularFirestoreDB.firestore.batch()
     // Declaro la referencia de los productos para actualizarlos mas adelante

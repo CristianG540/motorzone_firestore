@@ -128,4 +128,8 @@ export class BuscarPage {
 
   }
 
+  public get bodega (): string {
+    return (this.authServ.userData.bodega === '01') ? 'Medellin' : 'Bogota'
+  }
+
 }

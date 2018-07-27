@@ -180,4 +180,41 @@ export class MyApp {
     window.location.reload()
   }
 
+  private async changeWarehouse (): Promise<any> {
+    this.alertCtrl.create({
+      title: 'Cambiar bodega ?',
+      message: 'Recuerde que al cambiar la bodega todos los productos del carrito se van a borrar, aun asi desea cambiar la bodega ?',
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Si',
+          handler: () => {
+            // Cambio la bodega
+            this.authServ.changeWarehouse()
+              .then(() => {
+                // Si el cambio de bodega se realiza correctamente elimino el carrito
+                return this.cartServ.destroyDB(true)
+              })
+              .then(() => {
+                // si el carrito se elimina correctamente recargo la app
+                this.reloadApp()
+              })
+              .catch(err => {
+                this.cgServ.showToast('Error al cambiar la bodega!')
+                console.error('Error changeWarehouse - app.component', err)
+                Raven.captureException(new Error(`Error changeWarehouse - app.component 🐛: ${JSON.stringify(err)}`), {
+                  extra: err
+                })
+              })
+
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    }).present()
+  }
+
 }
