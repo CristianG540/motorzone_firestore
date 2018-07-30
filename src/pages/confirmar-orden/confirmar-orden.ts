@@ -253,11 +253,18 @@ export class ConfirmarOrdenPage {
    * @memberof ConfirmarOrdenPage
    */
   public get formStatus (): boolean {
-    if (this.newClientFlag) {
-      return this.newClient.valid
+    if (this.cartServ.subTotalPrice >= 160000) {
+
+      if (this.newClientFlag) {
+        return this.newClient.valid
+      } else {
+        return this.ordenForm.valid
+      }
+
     } else {
-      return this.ordenForm.valid
+      return false
     }
+
   }
 
 }

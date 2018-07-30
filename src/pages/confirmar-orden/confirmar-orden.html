@@ -79,6 +79,14 @@
 
   </ng-template>
 
+  <ion-grid *ngIf="cartServ.subTotalPrice < 160000">
+    <ion-row>
+      <ion-col text-left>
+        <p style="color:red; font-size: 15px;">Recuerde que el pedido minimo es de 160.000 antes de IVA</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 
 </ion-content>
 
