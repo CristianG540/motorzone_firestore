@@ -104,12 +104,9 @@ export class BuscarPage {
           if (err === 'duplicate') {
             loading.dismiss()
             this.util.showToast(`El producto ya esta en el carrito`)
-          } else if (err === 'no_timsum_llantas') {
+          } else if (err === 'mtz_filtros_flag') {
             loading.dismiss()
-            this.util.showToast(`No puede agregar llantas timsum a este pedido`)
-          } else if (err === 'timsum_llantas') {
-            loading.dismiss()
-            this.util.showToast(`Solo puede agregar llantas timsum a este pedido`)
+            this.util.showToast(`Solo puede agregar filtros a este pedido`)
           } else {
             loading.dismiss()
             console.error('error addProd - buscar.ts - page', err)

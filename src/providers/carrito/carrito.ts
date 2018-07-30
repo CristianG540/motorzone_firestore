@@ -83,11 +83,8 @@ export class CarritoProvider {
               })
             }
             break
-          case 'timsum_llantas':
-            reject('timsum_llantas')
-            break
-          case 'no_timsum_llantas':
-            reject('no_timsum_llantas')
+          case 'mtz_filtros_flag':
+            reject('mtz_filtros_flag')
             break
           default:
             break
@@ -175,7 +172,7 @@ export class CarritoProvider {
       this._carItems.splice(index, 1)
       // Si elimino el ultimo producto del carrito
       // entonces limpio las banderas que me restringen ingresar
-      // llantas timsum junto otras cosas
+      // filtros junto otras cosas
       if (this._carItems.length === 0) {
         this.cleanFlags()
       }
@@ -187,12 +184,12 @@ export class CarritoProvider {
 
   /** *********** Fin Manejo de el estado de la ui    ********************** */
 
-  /** ********************** Manejo del tema de bogas timsum ********************************* */
+  /** ********************** Manejo del tema de filtros ********************************* */
   /**
    * Checkea si la bandera indicada en "flagId" existe o no existe
    * de esta manera puedo saber por ejemplo si se estan agregando llantas
-   * al pedido creando la bandera "_local/timsum_flag" o si se estan agregando
-   * repuestos, si se agregan llantas no se pueden agregar repuestos y viceversa
+   * al pedido creando la bandera "_local/mtz_filtros_flag" o si se estan agregando
+   * otra cosa, si se agregan filtros no se pueden agregar aceites etc
    *
    * @private
    * @param {string} flagId
@@ -221,42 +218,28 @@ export class CarritoProvider {
    */
   private async checkBodega (item: CarItem): Promise<string> {
 
-    // miro si la bandera de timsum esta creada, y verifico si el item
-    // que se esta ingresando no es una llanta timsum, si no es una llanta timsum
+    // miro si la bandera de filtros esta creada, y verifico si el item
+    // que se esta ingresando no es un filtro, si no es un filtro
     // y la bandera esta creada entonces devuelvo un error que le indica al usuario
-    // que solo puede agregar llantas al carrito
-    const flag: boolean = await this.checkFlag('_local/timsum_flag')
+    // que solo puede agregar filtros al carrito
+    const filtrosFlag: boolean = await this.checkFlag('_local/mtz_filtros_flag')
 
-    if (flag) {
-      if (item._id.substring(0, 2) === 'TY') {
-        if (item.titulo.substring(0, 6) !== 'LLANTA') {
-          return 'timsum_llantas'
+    if (filtrosFlag) {
+      if (item._id.substring(0, 2) === 'MF') {
+        if (item.titulo.substring(0, 6) !== 'FILTRO') {
+          return 'mtz_filtros_flag'
         }
       } else {
-        return 'timsum_llantas'
+        return 'mtz_filtros_flag'
       }
     }
 
-    // Verifica si la bandera para todo lo q no sean llantas timsum esta creada
-    // y verifico que el producto que se esta ingresando sea una llanta timsum,
-    // si es una llanta timsum entonces retorno un error que le indica al usuario
-    // que solo puede agregar repuestos al pedido o cosas q no sean llantas timsum
-    const flagNoLlantas: boolean = await this.checkFlag('_local/not_timsum_flag')
-
-    if (flagNoLlantas && item._id.substring(0, 2) === 'TY' && item.titulo.substring(0, 6) === 'LLANTA') {
-      return 'no_timsum_llantas'
-    }
-
-    // La primera vez que un item se agrega al carrito verifico si es una llanta timsum
-    // o si es un repuesto, asi decido q bandera crear, y de ahi en adelante solo se
+    // La primera vez que un item se agrega al carrito verifico si es un filtro
+    // asi decido q bandera crear, y de ahi en adelante solo se
     // podran agregar productos de ese tipo al carrito
-    if (item._id.substring(0, 2) === 'TY' && item.titulo.substring(0, 6) === 'LLANTA') {
+    if (item._id.substring(0, 2) === 'MF' && item.titulo.substring(0, 6) === 'FILTRO') {
       await this._db.putIfNotExists({
-        _id: '_local/timsum_flag'
-      })
-    } else {
-      await this._db.putIfNotExists({
-        _id: '_local/not_timsum_flag'
+        _id: '_local/mtz_filtros_flag'
       })
     }
 
@@ -273,19 +256,13 @@ export class CarritoProvider {
   private async cleanFlags (): Promise<any> {
     try {
       // tslint:disable-next-line:variable-name
-      const timsum_flag = await this._db.get('_local/timsum_flag')
-      await this._db.remove(timsum_flag)
+      const mtz_filtros_flag = await this._db.get('_local/mtz_filtros_flag')
+      await this._db.remove(mtz_filtros_flag)
     // tslint:disable-next-line:no-empty
     } catch (error) {}
 
-    try {
-      // tslint:disable-next-line:variable-name
-      const not_timsum_flag = await this._db.get('_local/not_timsum_flag')
-      await this._db.remove(not_timsum_flag)
-    // tslint:disable-next-line:no-empty
-    } catch (error) {}
   }
-  /** ********************** Fin Manejo del tema de bogas timsum ********************************* */
+  /** ********************** Fin Manejo del tema de restricciones de productos ********************************* */
 
   public deleteItem (prod: Producto): Promise<any> {
 
@@ -313,7 +290,7 @@ export class CarritoProvider {
   public destroyDB (init: boolean = false): Promise<any> {
     return this._db.destroy().then(() => {
       this._carItems = []
-      // Limpio las banderas de las restricciones de productos timsum
+      // Limpio las banderas de las restricciones de productos
       this.cleanFlags()
       if (init) {
         return this.initDB()
