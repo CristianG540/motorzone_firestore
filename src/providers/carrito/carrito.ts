@@ -20,6 +20,7 @@ export class CarritoProvider {
 
   private _db: any
   private _carItems: CarItem[] = []
+  public descuento: number = 0
 
   constructor (
     public evts: Events
@@ -217,7 +218,9 @@ export class CarritoProvider {
    * @memberof CarritoProvider
    */
   private async checkBodega (item: CarItem): Promise<string> {
-
+    // COMENTO EL CODIGO POR EL MOMENTO NO SE LE DA USO DEBIDO A LAS POLITICAS DE MOTORZONE
+    // NO LO ELIMINO POR Q LO PUEDO VOLVER A NECESITAR
+    /*
     // miro si la bandera de filtros esta creada, y verifico si el item
     // que se esta ingresando no es un filtro, si no es un filtro
     // y la bandera esta creada entonces devuelvo un error que le indica al usuario
@@ -242,7 +245,7 @@ export class CarritoProvider {
         _id: '_local/mtz_filtros_flag'
       })
     }
-
+    */
     return 'ok'
   }
 
@@ -398,7 +401,7 @@ export class CarritoProvider {
    * @memberof CarritoProvider
    */
   public get totalPrice (): number {
-    return this.subTotalPrice + this.ivaPrice
+    return this.subTotalPrice + this.ivaPrice - (this.subTotalPrice * this.descuento / 100)
   }
 
 }

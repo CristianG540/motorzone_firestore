@@ -30,6 +30,7 @@ export class ConfirmarOrdenPage {
   private newClient: FormGroup
   private newClientFlag: boolean = false
   private transportadora: number
+  private descuento: number = 0
 
   constructor (
     private authServ: AuthProvider,
@@ -82,6 +83,7 @@ export class ConfirmarOrdenPage {
     modal.onDidDismiss(data => {
       if (data) {
         this.ordenForm.controls['cliente'].setValue(data.nit)
+        this.descuento = this.cartServ.descuento = parseInt(data.data.descuento, 10)
         this.transportadora = data.transp
       }
     })
@@ -159,6 +161,7 @@ export class ConfirmarOrdenPage {
         observaciones: observaciones,
         items: carItems,
         total: this.cartServ.totalPrice,
+        descuento: this.descuento,
         transp: this.transportadora,
         estado: false,
         type: 'orden',
@@ -180,10 +183,11 @@ export class ConfirmarOrdenPage {
       orden = {
         _id : Date.now().toString(),
         newClient : form,
-        nitCliente: form.codCliente ? form.codCliente : '',
+        nitCliente: form.codCliente ? 'C' + form.codCliente : '',
         observaciones: observaciones,
         items: carItems,
         total: this.cartServ.totalPrice,
+        descuento: this.descuento,
         estado: false,
         type: 'orden',
         location: {
@@ -193,7 +197,6 @@ export class ConfirmarOrdenPage {
         accuracy: position.accuracy ? position.accuracy : ''
       }
     }
-
     /**
      * Guardo la orden en la base de datos
      */
@@ -238,6 +241,12 @@ export class ConfirmarOrdenPage {
           extra: err
         })
       })
+  }
+
+  private clienteNuevo (): void {
+    this.newClientFlag = !this.newClientFlag
+    this.descuento = 0
+    this.ordenForm.controls['cliente'].setValue('')
   }
 
   /**

@@ -105,7 +105,8 @@ export class OrdenProvider {
         asesor         : this.authServ.userData.username,
         asesor_id      : this.authServ.userData.idAsesor,
         user_email     : this.authServ.userData.email,
-        total          : orden.total
+        total          : orden.total,
+        descuento      : orden.descuento
       })
       const options = {
         headers: new HttpHeaders({

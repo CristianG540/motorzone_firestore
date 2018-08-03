@@ -37,13 +37,21 @@
         <div>{{ cartServ.ivaPrice | currency:'USD': 'symbol': '1.0-0' }}</div>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col text-left>
+        <div>Descuento</div>
+      </ion-col>
+      <ion-col text-right>
+        <div>{{ descuento + '%' }}</div>
+      </ion-col>
+    </ion-row>
     <hr>
     <ion-row>
       <ion-col text-left>
         <div>Total</div>
       </ion-col>
       <ion-col text-right>
-        <div>{{ cartServ.subTotalPrice + cartServ.ivaPrice | currency:'USD': 'symbol': '1.0-0' }}</div>
+        <div>{{ cartServ.totalPrice | currency:'USD': 'symbol': '1.0-0' }}</div>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -99,7 +107,7 @@
       </button>
     </ion-buttons>
     <ion-buttons right>
-        <button ion-button icon-right solid ion-button (click)="newClientFlag = !newClientFlag" tooltip="Crear un cliente nuevo" positionV="top" event="press" *ngIf="!authServ?.userData?.nitCliente">
+        <button ion-button icon-right solid ion-button (click)="clienteNuevo()" tooltip="Crear un cliente nuevo" positionV="top" event="press" *ngIf="!authServ?.userData?.nitCliente">
           cliente nuevo
           <ion-icon name="person-add"></ion-icon>
         </button>
