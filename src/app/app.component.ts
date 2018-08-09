@@ -19,6 +19,7 @@ import { ConfigProvider } from '../providers/config/config'
 import { OrdenProvider } from '../providers/orden/orden'
 import { CarritoProvider } from '../providers/carrito/carrito'
 import { ProductosProvider } from '../providers/productos/productos'
+import { GeolocationProvider } from '../providers/geolocation/geolocation'
 
 // Models
 import { User } from '../providers/auth/model/user'
@@ -53,6 +54,7 @@ export class MyApp {
     private ordenServ: OrdenProvider,
     private cartServ: CarritoProvider,
     private prodsServ: ProductosProvider,
+    private geoServ: GeolocationProvider,
     private evts: Events
   ) {
 
@@ -97,9 +99,14 @@ export class MyApp {
             email: this.authServ.userData.email,
             id: this.authServ.userData.uid
           })
+          // Inicio el rastreo de los usuarios
+          geoServ.startTracking()
+          // Pagina a mostrar
           this.rootPage = 'TabsPage'
         } else {
           Raven.setUserContext()
+          // Cuando el usuario cierra sesion apago el rastreo
+          geoServ.stopTracking()
           this.rootPage = LoginPage
         }
       },

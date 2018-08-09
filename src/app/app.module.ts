@@ -10,6 +10,7 @@ import { Geolocation } from '@ionic-native/geolocation'
 import { Diagnostic } from '@ionic-native/diagnostic'
 import { LocationAccuracy } from '@ionic-native/location-accuracy'
 import { IonicStorageModule } from '@ionic/storage'
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation'
 
 // Paginas
 import { MyApp } from './app.component'
@@ -79,6 +80,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore'
     ClientesProvider,
     GeolocationProvider,
     Geolocation,
+    BackgroundGeolocation,
     Diagnostic,
     LocationAccuracy,
     OrdenProvider,
