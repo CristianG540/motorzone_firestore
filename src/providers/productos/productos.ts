@@ -117,7 +117,8 @@ export class ProductosProvider {
           unidad: 'UND',
           existencias: 0,
           precio: 0,
-          origen: ''
+          origen: '',
+          descuento: 'NULL'
         }
       }
 

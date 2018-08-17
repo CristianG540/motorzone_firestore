@@ -9,6 +9,7 @@ export class Producto {
     public unidad: string,
     public existencias: number,
     public precio: number,
+    public descuento: string,
     public origen?: string,
     // tslint:disable-next-line:variable-name
     public updated_at?: number,

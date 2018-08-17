@@ -42,7 +42,7 @@
         <div>Descuento</div>
       </ion-col>
       <ion-col text-right>
-        <div>{{ descuento + '%' }}</div>
+        <div>{{ cartServ.descuento | currency:'USD': 'symbol': '1.0-0' }}</div>
       </ion-col>
     </ion-row>
     <hr>

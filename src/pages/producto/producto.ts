@@ -40,6 +40,7 @@ export class ProductoPage {
         this.cartServ.pushItem({
           _id: this.producto._id,
           cantidad: d.txtCantidad,
+          descuento: this.producto.descuento,
           totalPrice: this.producto.precio * d.txtCantidad,
           titulo: this.producto.titulo
         }).then(res => {

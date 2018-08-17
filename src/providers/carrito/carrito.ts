@@ -20,7 +20,7 @@ export class CarritoProvider {
 
   private _db: any
   private _carItems: CarItem[] = []
-  public descuento: number = 0
+  public condicionPago: number = 0
 
   constructor (
     public evts: Events
@@ -49,6 +49,7 @@ export class CarritoProvider {
     return new Promise((resolve, reject) => {
 
       this.checkBodega(item).then(val => {
+        debugger
 
         switch (val) {
           case 'ok':
@@ -104,10 +105,11 @@ export class CarritoProvider {
     return this._db.allDocs({
       include_docs: true
     }).then(res => {
-      this._carItems = res.rows.map((row) => {
+      this._carItems = res.rows.map((row): CarItem => {
         return {
           _id : row.doc._id,
           cantidad : row.doc.cantidad,
+          descuento : row.doc.descuento,
           totalPrice : row.doc.totalPrice,
           _rev : row.doc._rev
         }
@@ -134,6 +136,7 @@ export class CarritoProvider {
         this._onUpdatedOrInserted({
           _id : change.doc._id,
           cantidad : change.doc.cantidad,
+          descuento : (change.doc.descuento && change.doc.descuento !== 'NULL') ? change.doc.descuento : 'NULL',
           titulo : change.doc.titulo,
           totalPrice : change.doc.totalPrice,
           _rev : change.doc._rev
@@ -382,6 +385,30 @@ export class CarritoProvider {
   }
 
   /**
+   * Getter que me trae el total del pedido sin en el iva
+   *
+   * @readonly
+   * @type {number}
+   * @memberof CarritoProvider
+   */
+  public get descuento (): number {
+    if (!this.condicionPago) {
+      return 0
+    }
+    return _.reduce(this._carItems, (acum, item: CarItem) => {
+
+      let descuentoFinal = 0
+      let descuentoPorcentaje = 0
+      if (item.descuento && item.descuento !== 'NULL') {
+        const descuentos = item.descuento.split('-')
+        descuentoPorcentaje = this.condicionPago === 32 ? parseInt(descuentos[0], 10) : parseInt(descuentos[1], 10)
+        descuentoFinal = item.totalPrice * descuentoPorcentaje / 100
+      }
+      return acum + descuentoFinal
+    }, 0)
+  }
+
+  /**
    * getter recupera el iva del pedido
    *
    * @readonly
@@ -401,7 +428,7 @@ export class CarritoProvider {
    * @memberof CarritoProvider
    */
   public get totalPrice (): number {
-    return this.subTotalPrice + this.ivaPrice - (this.subTotalPrice * this.descuento / 100)
+    return this.subTotalPrice + this.ivaPrice - this.descuento
   }
 
 }

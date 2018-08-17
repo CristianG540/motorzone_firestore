@@ -94,6 +94,7 @@ export class BuscarPage {
         this.cartService.pushItem({
           _id: producto._id,
           cantidad: d.txtCantidad,
+          descuento: producto.descuento,
           totalPrice: producto.precio * d.txtCantidad,
           titulo: producto.titulo
         }).then(res => {

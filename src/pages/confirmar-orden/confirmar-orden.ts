@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 
@@ -24,12 +24,13 @@ import { ProductosProvider } from '../../providers/productos/productos'
   selector: 'page-confirmar-orden',
   templateUrl: 'confirmar-orden.html'
 })
-export class ConfirmarOrdenPage {
+export class ConfirmarOrdenPage implements OnDestroy {
 
   private ordenForm: FormGroup
   private newClient: FormGroup
   private newClientFlag: boolean = false
   private transportadora: number
+  private condicionPago: number = 0
   private descuento: number = 0
 
   constructor (
@@ -49,6 +50,9 @@ export class ConfirmarOrdenPage {
   // Runs when the page is about to enter and become the active page.
   ionViewWillLoad () {
     this.initializeForm()
+  }
+  ngOnDestroy () {
+    this.condicionPago = this.cartServ.condicionPago = 0
   }
 
   private initializeForm (): void {
@@ -83,7 +87,7 @@ export class ConfirmarOrdenPage {
     modal.onDidDismiss(data => {
       if (data) {
         this.ordenForm.controls['cliente'].setValue(data.nit)
-        this.descuento = this.cartServ.descuento = parseInt(data.data.descuento, 10)
+        this.condicionPago = this.cartServ.condicionPago = parseInt(data.data.condicion_pago, 10)
         this.transportadora = data.transp
       }
     })
@@ -244,8 +248,8 @@ export class ConfirmarOrdenPage {
   }
 
   private clienteNuevo (): void {
+    this.condicionPago = this.cartServ.condicionPago = 0
     this.newClientFlag = !this.newClientFlag
-    this.descuento = 0
     this.ordenForm.controls['cliente'].setValue('')
   }
 
