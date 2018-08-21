@@ -148,7 +148,17 @@ export class ConfirmarOrdenPage implements OnDestroy {
     /**
      * recupero los items del carrito para guardarlos en la orden
      */
-    const carItems: CarItem[] = this.cartServ.carItems
+    let carItems: CarItem[] = this.cartServ.carItems
+
+    carItems = _.map(carItems, item => {
+      console.log('el descuento', this.condicionPago)
+      if (item.descuento && item.descuento !== 'NULL') {
+        const descuentos = item.descuento.split('-')
+        item.descuento = this.condicionPago === 18 ? descuentos[0] : descuentos[1]
+      }
+      return item
+    })
+
     let orden: Orden
     const observaciones = this.ordenForm.get('observaciones').value
     /**

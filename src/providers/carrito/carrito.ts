@@ -49,7 +49,6 @@ export class CarritoProvider {
     return new Promise((resolve, reject) => {
 
       this.checkBodega(item).then(val => {
-        debugger
 
         switch (val) {
           case 'ok':
@@ -391,21 +390,25 @@ export class CarritoProvider {
    * @type {number}
    * @memberof CarritoProvider
    */
-  public get descuento (): number {
+  public get descuento (): any {
     if (!this.condicionPago) {
       return 0
     }
     return _.reduce(this._carItems, (acum, item: CarItem) => {
-
+      // debugger
       let descuentoFinal = 0
       let descuentoPorcentaje = 0
       if (item.descuento && item.descuento !== 'NULL') {
         const descuentos = item.descuento.split('-')
-        descuentoPorcentaje = this.condicionPago === 32 ? parseInt(descuentos[0], 10) : parseInt(descuentos[1], 10)
+        descuentoPorcentaje = this.condicionPago === 18 ? parseInt(descuentos[0], 10) : parseInt(descuentos[1], 10)
         descuentoFinal = item.totalPrice * descuentoPorcentaje / 100
       }
       return acum + descuentoFinal
     }, 0)
+  }
+
+  public set descuento (v: any) {
+    console.log('basura de mierda', v)
   }
 
   /**

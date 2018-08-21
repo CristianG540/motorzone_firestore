@@ -91,7 +91,7 @@ export class OrdenProvider {
           titulo     : item.titulo,
           total      : item.totalPrice,
           bodega     : this.authServ.userData.bodega,
-          descuento  : 0
+          descuento  : (item.descuento && item.descuento !== 'NULL') ? parseInt(item.descuento, 10) : 0
         }
       })
 
