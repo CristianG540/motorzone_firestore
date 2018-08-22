@@ -27,12 +27,12 @@
             <ion-input formControlName="username" placeholder="Usuario" type="text"></ion-input>
           </ion-item>
 
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>
               <ion-icon name="person"></ion-icon>
             </ion-label>
             <ion-input formControlName="asesor_id" placeholder="ID asesor" type="text"></ion-input>
-          </ion-item>
+          </ion-item> -->
 
           <ion-item>
             <ion-label>
@@ -63,6 +63,21 @@
           </ion-item>
 
         </ion-list>
+
+        <div style="color:red; font-size: 15px;">
+          <p *ngIf="signupForm.get('name').hasError('required')" class="error">
+            * Ingrese su nombre completo.
+          </p>
+          <p *ngIf="signupForm.get('username').hasError('required')" class="error">
+            * Ingrese su nombre de usuario.
+          </p>
+          <p *ngIf="signupForm.get('nit_cliente').hasError('required')" class="error">
+            * Ingrese su NIT.
+          </p>
+          <p *ngIf="signupForm.get('email').hasError('email')" class="error">
+            * Ingrese su Correo con un formato correcto ej: ejemplo@gmail.com
+          </p>
+        </div>
 
         <button type="submit" ion-button class="continue-button" [disabled]="!signupForm.valid">Registrar</button>
 

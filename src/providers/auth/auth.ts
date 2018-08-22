@@ -80,7 +80,7 @@ export class AuthProvider {
         name: d.name,
         username: d.username,
         email: user.email,
-        idAsesor: d.asesor_id,
+        // idAsesor: d.asesor_id,
         nitCliente: d.nit_cliente,
         verificationEmailIsSend: false,
         bodega: '01'

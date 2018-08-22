@@ -1,53 +1,53 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 import {
   IonicPage,
   NavController,
   NavParams,
   MenuController,
-  AlertController,
-} from 'ionic-angular';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+  AlertController
+} from 'ionic-angular'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 // libs terceros
-import Raven from 'raven-js';
+import Raven from 'raven-js'
 
 // Providers
-import { AuthProvider } from '../../providers/auth/auth';
-import { ConfigProvider } from '../../providers/config/config';
+import { AuthProvider } from '../../providers/auth/auth'
+import { ConfigProvider } from '../../providers/config/config'
 
 @Component({
   selector: 'page-login',
-  templateUrl: 'login.html',
+  templateUrl: 'login.html'
 })
 export class LoginPage {
-  private loginForm: FormGroup;
-  private username: string;
-  private password: string;
+  private loginForm: FormGroup
+  private username: string
+  private password: string
 
-  private backgroundImage = 'assets/img/background/background-3.jpg';
+  private backgroundImage = 'assets/img/background/background-3.jpg'
 
-  constructor(
+  constructor (
     private navCtrl: NavController,
     private menuCtrl: MenuController,
     private alertCtrl: AlertController,
     private fb: FormBuilder,
     private navParams: NavParams,
     private authServ: AuthProvider,
-    private cgServ: ConfigProvider,
+    private cgServ: ConfigProvider
   ) {
-    this.menuCtrl.enable(false);
+    this.menuCtrl.enable(false)
   }
 
   // Runs when the page is about to enter and become the active page.
-  ionViewWillLoad() {
-    this.initializeForm();
+  ionViewWillLoad () {
+    this.initializeForm()
   }
 
-  private initializeForm(): void {
+  private initializeForm (): void {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
-      password: ['', Validators.required],
-    });
+      password: ['', Validators.required]
+    })
   }
 
   /*
@@ -93,43 +93,43 @@ export class LoginPage {
 
   */
 
-  private login(): void {
-    const loading = this.cgServ.showLoading();
-    const formModel = JSON.parse(JSON.stringify(this.loginForm.value));
+  private login (): void {
+    const loading = this.cgServ.showLoading()
+    const formModel = JSON.parse(JSON.stringify(this.loginForm.value))
     this.authServ
       .login(formModel.email, formModel.password)
       .then(res => {
-        return this.authServ.getTokenJosefa();
+        return this.authServ.getTokenJosefa()
       })
       .then(res => {
-        loading.dismiss();
+        loading.dismiss()
       })
       .catch(err => {
-        loading.dismiss();
+        loading.dismiss()
 
         if (err.code === 'auth/wrong-password') {
           this.alertCtrl.create({
             title: 'Alerta',
             message: 'La contraseña no es correcta o el usuario no existe',
-            buttons: ['Ok'],
-          }).present();
+            buttons: ['Ok']
+          }).present()
         }
 
-        console.error('Error login - pages/login.ts', err);
+        console.error('Error login - pages/login.ts', err)
         Raven.captureException(
           new Error(`Error login - pages/login.ts 🐛: ${JSON.stringify(err)}`),
           {
-            extra: err,
-          },
-        );
-      });
+            extra: err
+          }
+        )
+      })
   }
 
-  private launchSignup(): void {
-    this.navCtrl.push('SignupPage');
+  private launchSignup (): void {
+    this.navCtrl.push('SignupPage')
   }
 
-  private requestAccount(): void {
-    this.navCtrl.push('FormNewAccountPage');
+  private requestAccount (): void {
+    this.navCtrl.push('FormNewAccountPage')
   }
 }
