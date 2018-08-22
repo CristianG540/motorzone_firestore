@@ -150,4 +150,8 @@ export class AuthProvider {
     return this.storage.remove('josefa-token')
   }
 
+  public recoverPass (email: string): Promise<any> {
+    return this.angularFireAuth.auth.sendPasswordResetEmail(email)
+  }
+
 }

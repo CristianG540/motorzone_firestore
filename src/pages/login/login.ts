@@ -50,49 +50,6 @@ export class LoginPage {
     })
   }
 
-  /*
-  private login(): void {
-    let loading = this.util.showLoading();
-    let formModel = JSON.parse(JSON.stringify(this.loginForm.value));
-    let credentials = {
-      username: formModel.username,
-      password: formModel.password
-    };
-
-    this.authService.login(credentials)
-    .then(res=>{
-      console.log(res);
-
-      this.dbServ.init(res.userDBs.supertest, this.authService.userId).then( info => {
-        console.warn('DbAverno- First Replication complete');
-      }).catch( err => {
-        console.error("DbAverno-totally unhandled error (shouldn't happen)", err);
-        Raven.captureException( new Error(`DbAverno- Error en la bd local no deberia pasar 😫: ${JSON.stringify(err)}`), {
-          extra: err
-        } );
-      });
-
-      return this.authService.getTokenJosefa();
-    })
-    .then( () => {
-      this.cartServ.initDB();
-      Raven.setUserContext({
-        username: this.authService.userId,
-        email: this.authService.userEmail,
-        id: this.authService.asesorId
-      });
-      // Creo un setinterval que verifica las ordenes cada X tiempo
-      this.ordenServ.setIntervalOrdersSap();
-      this.util.setTimerCheckJosefa();
-      this.navCtrl.setRoot('TabsPage');
-      loading.dismiss();
-
-    } )
-    .catch( err => this.util.errorHandler(err.message, err, loading) )
-  }
-
-  */
-
   private login (): void {
     const loading = this.cgServ.showLoading()
     const formModel = JSON.parse(JSON.stringify(this.loginForm.value))
@@ -129,7 +86,34 @@ export class LoginPage {
     this.navCtrl.push('SignupPage')
   }
 
-  private requestAccount (): void {
-    this.navCtrl.push('FormNewAccountPage')
+  private requestNewPass (): void {
+    const prompt = this.alertCtrl.create({
+      title: 'Recuperar contraseña',
+      message: 'Ingrese su correo electrónico, le enviaremos un link con el que podrá restablecer su contraseña',
+      inputs: [
+        {
+          name: 'correo',
+          placeholder: 'ejemplo@gmail.com'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Enviar',
+          handler: data => {
+            console.log(data)
+            if (data.correo) {
+              this.authServ.recoverPass(data.correo).then(res => {
+                console.log('respuesta al recuperar pass', res)
+              }).catch(err => console.error('Error al enviar el correo para restablecer la contraseña - pages/login.ts', err))
+            }
+          }
+        }
+      ]
+    })
+    prompt.present()
   }
 }
