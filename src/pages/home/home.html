@@ -5,21 +5,16 @@
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-buttons right>
-      <button ion-button icon-only (click)="addSong()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-buttons>
     <ion-title>
-      Ionic Blank
+      Inicio
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
-    <ion-item *ngFor="let song of songServ.songs" (click)="showOptions(song.id, song.title)">
-      {{ song.title }}
-    </ion-item>
-  </ion-list>
+  <p>* Su cuenta aun no esta activada por favor comun&iacute;cate con <b>Motorzone</b>.</p>
+  <ul>
+    <li>(4)4442025 *cambiar</li>
+    <li>3207886197 – 3217011070 *cambiar</li>
+  </ul>
 </ion-content>

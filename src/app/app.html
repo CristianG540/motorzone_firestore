@@ -17,11 +17,11 @@
         <ion-icon name="sync" item-left></ion-icon>
         Recargar App
       </button>
-      <button menuClose="left" ion-item detail-none (click)="changeWarehouse()">
+      <button *ngIf="authServ?.userData?.idAsesor" menuClose="left" ion-item detail-none (click)="changeWarehouse()">
         <ion-icon name="cube" item-left></ion-icon>
         Cambiar Bodega
       </button>
-      <button menuClose="left" ion-item detail-none (click)="verificarOrdenes()" [disabled]="btnVerifOrdState">
+      <button *ngIf="authServ?.userData?.idAsesor" menuClose="left" ion-item detail-none (click)="verificarOrdenes()" [disabled]="btnVerifOrdState">
         <ion-icon name="cloud-upload" item-left></ion-icon>
         Verificar Ordenes
       </button>
