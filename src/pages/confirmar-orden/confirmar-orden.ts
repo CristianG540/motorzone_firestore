@@ -29,7 +29,7 @@ export class ConfirmarOrdenPage implements OnDestroy {
   private ordenForm: FormGroup
   private newClient: FormGroup
   private newClientFlag: boolean = false
-  private transportadora: number
+  private transportadora: number = 0
   private condicionPago: number = 0
   private descuento: number = 0
 
