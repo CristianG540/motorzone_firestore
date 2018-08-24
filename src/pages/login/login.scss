@@ -14,10 +14,10 @@ page-login {
     overflow: hidden;
   }
   .logo {
-    max-width: 30%;
+    max-width: 60%;
     height: auto !important;
     margin: 0 auto;
-    padding-bottom: 50px;
+    // padding-bottom: 50px;
   }
   .no-border {
     border-bottom: 0 !important;
@@ -29,6 +29,7 @@ page-login {
   }
   span {
     color: white;
+    background-color: rgba(57, 152, 220, 0.6);padding: 4px;border-radius: 3px;cursor: pointer;
   }
   ion-item {
     // border-radius: 30px !important;
