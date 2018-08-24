@@ -87,7 +87,7 @@ export class GeolocationProvider {
       desiredAccuracy: 10,
       stationaryRadius: 20,
       distanceFilter: 10,
-      debug: true,
+      debug: false,
       interval: 60000,
       stopOnTerminate: false,
       locationProvider: 1,
