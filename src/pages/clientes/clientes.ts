@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component } from '@angular/core'
+import { NavController, NavParams } from 'ionic-angular'
 
 // Pages
-import { CarteraPage } from '../cartera/cartera';
+import { CarteraPage } from '../cartera/cartera'
 
 @Component({
   selector: 'page-clientes',
-  templateUrl: 'clientes.html',
+  templateUrl: 'clientes.html'
 })
 export class ClientesPage {
 
-  private carteraPage = CarteraPage;
-  private searchClientPage = 'ClienteModalPage';
+  private carteraPage = CarteraPage
+  private searchClientPage = 'ClienteModalPage'
 
-  constructor(
+  constructor (
     public navCtrl: NavController,
-    public navParams: NavParams,
+    public navParams: NavParams
   ) {
   }
 
