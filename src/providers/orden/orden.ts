@@ -107,7 +107,8 @@ export class OrdenProvider {
         user_email     : this.authServ.userData.email,
         total          : orden.total,
         descuento      : orden.descuento,
-        bodega         : this.authServ.userData.bodega
+        bodega         : this.authServ.userData.bodega,
+        tipo_usuario   : (this.authServ.userData.nitCliente) ? 'cliente' : 'asesor'
       })
 
       const options = {
